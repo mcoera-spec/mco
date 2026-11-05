@@ -233,7 +233,7 @@ function b64(f){return new Promise(function(r,j){var x=new FileReader();x.onload
 var form=document.getElementById('f'),msg=document.getElementById('msg');
 function show(t,c){msg.textContent=t;msg.className=c;msg.style.display='block'}
 document.getElementById('thxc').addEventListener('click',function(){document.getElementById('thx').classList.remove('on');document.body.style.overflow=''});
-var LIVE=false,go=document.getElementById('go'),MAIL_URL='https://formsubmit.co/ariestruong4@gmail.com';
+var LIVE=!/claude|anthropic|^$/.test(location.hostname),go=document.getElementById('go'),MAIL_URL='https://formsubmit.co/ariestruong4@gmail.com';
 function shrink(inp,type,name){var f=inp.files[0];return new Promise(function(res){var img=new Image();img.onload=function(){try{var s=Math.min(1,1600/Math.max(img.width,img.height)),c=document.createElement('canvas');c.width=Math.round(img.width*s);c.height=Math.round(img.height*s);c.getContext('2d').drawImage(img,0,0,c.width,c.height);c.toBlob(function(b){try{if(b){var dt=new DataTransfer();dt.items.add(new File([b],name,{type:type}));inp.files=dt.files}}catch(x){}res()},type,.88)}catch(x){res()}};img.onerror=function(){res()};img.src=URL.createObjectURL(f)})}
 function wait(p,ms){return Promise.race([p,new Promise(function(r){setTimeout(r,ms)})])}
 function fin(note){document.getElementById('thxn').textContent=note||'';var th=document.getElementById('thx');th.classList.add('on');th.scrollTop=0;document.body.style.overflow='hidden';msg.style.display='none';form.reset();document.querySelectorAll('.prev').forEach(function(p){p.style.display='none'});go.disabled=false;go.textContent='Submit Application'}
