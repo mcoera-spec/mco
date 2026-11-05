@@ -208,7 +208,7 @@ h2{font-size:clamp(17px,4.8vw,28px)}
 <section id="contact"><h2>Contact</h2>
 <p class="c" style="text-align:center">Follow the pageant on ZEPETO: <b style="color:var(--pearl)">@misscosmotv</b></p>
 <div style="text-align:center"><a class="btn" style="margin-top:0" href="#" id="zlink">Open ZEPETO</a></div></section>
-<div class="thx" id="thx"><div class="thx-in"><img class="tl" data-logo="mco" alt="MCO ALLSTARS"><div class="era sm"><img class="cw" data-logo="cosmoword" alt="COSMO"><em>ERA</em></div><h2>Thank you!</h2><p>Your application to <b>MCO ALLSTARS – Unique Beauty</b> (Miss Cosmo Season 11) has been received successfully.</p><p>A confirmation email is on its way to your inbox. Our team will review your profile and contact you very soon. Please also check your Spam folder.</p><p class="sub" id="thxn"></p><a class="btn" href="#splash" id="thxc">Back to home</a></div></div>
+<div class="thx" id="thx"><div class="thx-in"><img class="tl" data-logo="mco" alt="MCO ALLSTARS"><div class="era sm"><img class="cw" data-logo="cosmoword" alt="COSMO"><em>ERA</em></div><h2>Thank you!</h2><p>Your application to <b>MCO ALLSTARS – Unique Beauty</b> (Miss Cosmo Season 11) has been received successfully.</p><p id="thxp">A confirmation email is on its way to your inbox. Our team will review your profile and contact you very soon. Please also check your Spam folder.</p><p class="sub" id="thxn"></p><a class="btn" href="#splash" id="thxc">Back to home</a></div></div>
 <iframe name="fsub" id="fsub" title="submit" style="display:none"></iframe><footer>© MCO ALLSTARS · Miss Cosmo · Organized by Cosmo Era Company 🇻🇳</footer></div>
 <div id="v-splash" class="view on"><div class="full"><div class="orbit"><div class="ring"><a class="ob" style="--a:0deg" href="#earth"><div class="obi"><img data-logo="earth" alt="Miss Earth"></div></a><a class="ob" style="--a:72deg" href="#cosmo"><div class="obi dk"><img data-logo="cosmo" alt="Miss Cosmo"></div></a><a class="ob" style="--a:144deg" href="#international"><div class="obi"><img data-logo="international" alt="Miss International"></div></a><a class="ob" style="--a:216deg" href="#charm"><div class="obi"><img data-logo="charm" alt="Miss Charm"></div></a><a class="ob" style="--a:288deg" href="#universe"><div class="obi"><img data-logo="universe" alt="Miss Universe"></div></a></div><div class="era" id="eralogo"><img class="cw" data-logo="cosmoword" alt="COSMO"><em>ERA</em></div></div><div class="sub" style="margin-top:22px">Cosmo Era Company · Vietnam 🇻🇳</div><a class="btn" href="#hub">Enter</a></div></div>
 <div id="v-hub" class="view"><section><div class="era sm"><img class="cw" data-logo="cosmoword" alt="COSMO"><em>ERA</em></div><h2 style="margin-top:30px">Our Pageants</h2>
@@ -231,8 +231,9 @@ function b64(f){return new Promise(function(r,j){var x=new FileReader();x.onload
 var form=document.getElementById('f'),msg=document.getElementById('msg');
 function show(t,c){msg.textContent=t;msg.className=c;msg.style.display='block'}
 document.getElementById('thxc').addEventListener('click',function(){document.getElementById('thx').classList.remove('on');document.body.style.overflow=''});
+var WEB3_KEY="43f507ee-30cb-4530-a52a-e7e665560f67"; // dán Access Key của Web3Forms vào giữa 2 dấu ngoặc kép
 var LIVE=!/claude|anthropic|^$/.test(location.hostname),go=document.getElementById('go'),MAIL_URL='https://formsubmit.co/ariestruong4@gmail.com';
-function fin(note){document.getElementById('thxn').textContent=note||'';var th=document.getElementById('thx');th.classList.add('on');th.scrollTop=0;document.body.style.overflow='hidden';msg.style.display='none';form.reset();go.disabled=false;go.textContent='Submit Application'}
+function fin(note){if(WEB3_KEY)document.getElementById('thxp').textContent='Our team will review your profile and contact you very soon through the email you provided.';document.getElementById('thxn').textContent=note||'';var th=document.getElementById('thx');th.classList.add('on');th.scrollTop=0;document.body.style.overflow='hidden';msg.style.display='none';form.reset();go.disabled=false;go.textContent='Submit Application'}
 function bad(m){show(m,'er');go.disabled=false;go.textContent='Submit Application'}
 form.onsubmit=async function(e){e.preventDefault();
 go.disabled=true;go.textContent='Sending…';msg.style.display='none';
@@ -240,7 +241,9 @@ try{
 if(!LIVE){await new Promise(function(r){setTimeout(r,900)});fin(' (Preview only: emails are sent once the page is hosted on your own site.)');return}
 var o={};new FormData(form).forEach(function(v,k){o[k]=v});
 var ac=new AbortController(),to=setTimeout(function(){ac.abort()},30000);
-var r=await fetch(MAIL_URL.replace('formsubmit.co/','formsubmit.co/ajax/'),{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify(o),signal:ac.signal});
+var url=MAIL_URL.replace('formsubmit.co/','formsubmit.co/ajax/');
+if(WEB3_KEY){url='https://api.web3forms.com/submit';var o2={access_key:WEB3_KEY,subject:'New MCO ALLSTARS application: '+o.nickname,from_name:'MCO ALLSTARS Website'};['nickname','zepetoId','profile','country','email','instagram','tiktok','facebook','driveLink','history','bio'].forEach(function(k){o2[k]=o[k]||''});o=o2}
+var r=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify(o),signal:ac.signal});
 clearTimeout(to);var j={};try{j=await r.json()}catch(x){}
 if(r.ok&&String(j.success)==='true'){fin()}else{bad('Not sent: '+(j.message||('Server error '+r.status)))}
 }catch(x){bad('Could not send. Please check your connection and try again.')}}
